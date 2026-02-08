@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PMERJ - Reserva de Armas</title>
+    <link rel="shortcut icon" type="imagex/png" href="caveira.ico">
+
     <style>
-        /* --- ESTÉTICA PMERJ (Azul e Dourado) --- */
+        /* --- ESTÉTICA PMERJ --- */
         :root {
-            --cor-fundo: #00153B; /* Azul Marinho Profundo */
-            --cor-card: #F4F4F4;  /* Branco Gelo para contraste */
-            --cor-destaque: #FFD700; /* Dourado */
+            --cor-fundo: #00153B; 
+            --cor-card: #F4F4F4;  
+            --cor-destaque: #FFD700; 
             --cor-texto: #333;
             --cor-botao: #00205b;
         }
@@ -19,11 +21,9 @@
             background-color: var(--cor-fundo);
             color: white;
             margin: 0;
-            padding: 0; /* Removido padding do body para o header encostar */
             padding-bottom: 20px;
         }
 
-        /* --- NOVO CABEÇALHO INSTITUCIONAL --- */
         .header-pmerj {
             background: linear-gradient(to bottom, #00205b, #001030);
             padding: 15px 20px;
@@ -32,103 +32,37 @@
             justify-content: space-between;
             border-bottom: 3px solid var(--cor-destaque);
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            position: relative;
-            overflow: hidden;
         }
 
-        /* Área do Brasão (Esquerda) */
-        .logo-container {
-            flex: 0 0 auto;
-            z-index: 2;
-        }
-        
-        .logo-brasao {
-            height: 90px; /* Ajuste a altura conforme seu brasão */
-            width: auto;
-            /* Filtro para dar destaque e sombra no brasão */
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.7));
-            transition: transform 0.3s ease;
-        }
-        .logo-brasao:hover {
-            transform: scale(1.05);
-        }
+        .logo-brasao { height: 90px; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.7)); }
 
-        /* Área dos Títulos (Centro) */
-        .titulo-container {
-            flex-grow: 1;
-            text-align: center;
-            z-index: 2;
-            padding: 0 15px;
-        }
+        .titulo-container { flex-grow: 1; text-align: center; }
+        .titulo-principal { margin: 0; font-size: 1rem; color: #FFFFFF; opacity: 0.9; }
+        .titulo-sistema { margin: 5px 0 0 0; font-size: 1.5rem; font-weight: 900; color: var(--cor-destaque); text-transform: uppercase; }
 
-        .titulo-principal {
-            margin: 0;
-            font-size: 1rem;
-            color: #FFFFFF;
-            letter-spacing: 1px;
-            font-weight: normal;
-            opacity: 0.9;
-        }
-
-        .titulo-sistema {
-            margin: 5px 0 0 0;
-            font-size: 1.5rem;
-            font-weight: 900; /* Negrito extra */
-            color: var(--cor-destaque);
-            text-transform: uppercase;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-        }
-
-        /* Faixa decorativa CSS abaixo do header */
         .faixa-decorativa {
             height: 8px;
-            background: repeating-linear-gradient(
-                45deg,
-                var(--cor-destaque),
-                var(--cor-destaque) 20px,
-                var(--cor-botao) 20px,
-                var(--cor-botao) 40px
-            );
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+            background: repeating-linear-gradient(45deg, var(--cor-destaque), var(--cor-destaque) 20px, var(--cor-botao) 20px, var(--cor-botao) 40px);
             margin-bottom: 20px;
         }
 
+        .main-container { padding: 0 20px; max-width: 1200px; margin: 0 auto; }
 
-        /* --- CONTAINER PRINCIPAL DO CONTEÚDO --- */
-        .main-container {
-            padding: 0 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* --- FILTROS DE TURMA --- */
-        .filtros-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 25px 0;
-            flex-wrap: wrap;
-        }
-
+        /* --- FILTROS --- */
+        .filtros-container { display: flex; justify-content: center; gap: 8px; margin: 25px 0; flex-wrap: wrap; }
         .btn-filtro {
             background: rgba(0, 32, 91, 0.6);
             border: 2px solid var(--cor-destaque);
             color: var(--cor-destaque);
-            padding: 10px 25px;
-            border-radius: 30px; /* Mais arredondado */
+            padding: 8px 15px;
+            border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s;
-            letter-spacing: 1px;
+            font-size: 0.8rem;
         }
+        .btn-filtro.ativo { background: var(--cor-destaque); color: var(--cor-fundo); }
 
-        .btn-filtro:hover, .btn-filtro.ativo {
-            background: var(--cor-destaque);
-            color: var(--cor-fundo);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-        }
-
-        /* --- ÁREA DE REGISTRO (INPUTS) --- */
+        /* --- REGISTRO --- */
         .registro-box {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 215, 0, 0.3);
@@ -138,199 +72,82 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            align-items: center;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
         }
 
-        .inputs-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-        }
+        .inputs-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; width: 100%; }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            color: var(--cor-destaque);
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
+        .input-group { display: flex; flex-direction: column; color: var(--cor-destaque); font-weight: bold; font-size: 0.85rem; }
 
         select, input[type="date"] {
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
             border: 2px solid var(--cor-botao);
-            font-weight: bold;
             background: var(--cor-card);
             color: var(--cor-texto);
             margin-top: 5px;
-            outline: none;
         }
-        select:focus, input:focus { border-color: var(--cor-destaque); }
 
-        /* Botão de Câmera */
         .btn-camera {
             background: linear-gradient(135deg, var(--cor-destaque), #e6c200);
             color: var(--cor-fundo);
-            padding: 12px 25px;
+            padding: 12px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 800;
-            display: inline-flex;
+            display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
             border: none;
-            margin-top: auto; /* Alinha com os inputs */
-            height: 45px; /* Altura fixa para alinhar */
-            box-sizing: border-box;
+            margin-top: 22px;
         }
-        .btn-camera:active { transform: scale(0.98); }
 
         .btn-salvar {
             background: linear-gradient(135deg, #28a745, #218838);
             color: white;
             border: none;
-            padding: 12px 40px;
+            padding: 15px;
             border-radius: 30px;
             cursor: pointer;
             font-size: 1.1rem;
             font-weight: bold;
             display: none;
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
-            margin-top: 15px;
-        }
-
-        #preview-img {
-            max-width: 250px;
-            border: 4px solid var(--cor-destaque);
-            border-radius: 8px;
-            display: none;
-            margin-top: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-
-        /* --- GRID DE CARDS --- */
-        .grid-papeletas {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: var(--cor-card);
-            color: var(--cor-texto);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-            position: relative;
-            border-bottom: 6px solid var(--cor-botao);
-            transition: transform 0.3s;
-        }
-        .card:hover { transform: translateY(-5px); }
-
-        .card-header {
-            background: #e9ecef;
-            padding: 10px 15px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #d0d0d0;
-        }
-
-        .turma-badge {
-            background: var(--cor-botao);
-            color: var(--cor-destaque);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 800;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .card-img {
             width: 100%;
-            height: 140px;
-            object-fit: cover;
-            cursor: pointer;
-            display: block;
+            max-width: 300px;
+            margin: 15px auto 0;
         }
 
-        .btn-excluir {
-            background: #c82333;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: background 0.2s;
-        }
-        .btn-excluir:hover { background: #dc3545; }
+        #preview-img { max-width: 200px; border: 3px solid var(--cor-destaque); border-radius: 8px; display: none; margin: 15px auto; }
 
-        /* Modal foto */
-        #modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,20,91,0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-        #modal-img {
-            max-width: 95%; max-height: 90%;
-            border: 3px solid var(--cor-destaque);
-            border-radius: 8px;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-        }
+        /* --- GRID --- */
+        .grid-papeletas { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .card { background: var(--cor-card); color: var(--cor-texto); border-radius: 12px; overflow: hidden; border-bottom: 6px solid var(--cor-botao); }
+        .card-header { background: #e9ecef; padding: 10px; font-size: 0.8rem; font-weight: bold; }
+        .card-body { padding: 10px; text-align: center; }
+        .badge { background: var(--cor-botao); color: var(--cor-destaque); padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; margin-right: 4px; }
+        .card-img { width: 100%; height: 150px; object-fit: cover; cursor: pointer; }
+        .btn-excluir { background: #c82333; color: white; border: none; width: 100%; padding: 8px; cursor: pointer; }
 
-        /* --- RESPONSIVIDADE PARA CELULAR --- */
-        @media (max-width: 600px) {
-            .header-pmerj {
-                flex-direction: column;
-                text-align: center;
-                padding: 15px 10px;
-            }
-            .logo-container { margin-bottom: 10px; }
-            .logo-brasao { height: 70px; }
-            .titulo-principal { font-size: 0.9rem; }
-            .titulo-sistema { font-size: 1.2rem; }
-            
-            .inputs-row { flex-direction: column; align-items: stretch; }
-            .btn-camera { width: 100%; justify-content: center; height: auto; padding: 15px; }
-            .input-group { width: 100%; }
-            
-            .grid-papeletas { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-        }
+        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        #modal-img { max-width: 95%; max-height: 90%; border: 2px solid gold; }
     </style>
 </head>
 <body>
 
     <header class="header-pmerj">
         <div class="logo-container">
-            <img src="logo_pmerj.png" alt="Brasão PMERJ" class="logo-brasao" 
-                 onerror="this.src='https://via.placeholder.com/90x100/FFD700/00153B?text=BRASÃO'; this.style.border='2px solid #FFD700'; this.style.borderRadius='50%';">
+            <a href="../dashboard.html"><img src="logo_pmerj.png" alt="Brasão" class="logo-brasao" onerror="this.src='https://via.placeholder.com/90x100?text=PMERJ'"></a>
         </div>
-        
         <div class="titulo-container">
             <h1 class="titulo-principal">POLÍCIA MILITAR DO ESTADO DO RIO DE JANEIRO</h1>
-            <h2 class="titulo-sistema">RESERVA DE ARMAS - CONTROLE DE PAPELETAS</h2>
+            <h2 class="titulo-sistema">RESERVA DE ARMAS - PAPELETAS</h2>
         </div>
-        
-        <div style="flex: 0 0 90px;" class="desktop-only"></div>
+        <div style="width: 90px;"></div>
     </header>
     
     <div class="faixa-decorativa"></div>
 
     <div class="main-container">
-
         <div class="filtros-container">
             <button class="btn-filtro" onclick="filtrar('TODAS')">TODAS</button>
             <button class="btn-filtro" onclick="filtrar('A')">TURMA A</button>
@@ -342,17 +159,36 @@
         <div class="registro-box">
             <div class="inputs-row">
                 <div class="input-group">
-                    <label for="dataInput">DATA:</label>
+                    <label>DATA:</label>
                     <input type="date" id="dataInput">
                 </div>
                 
                 <div class="input-group">
-                    <label for="turmaInput">TURMA:</label>
+                    <label>TURMA (ALA):</label>
                     <select id="turmaInput">
                         <option value="A">TURMA A</option>
                         <option value="B">TURMA B</option>
                         <option value="C">TURMA C</option>
                         <option value="D">TURMA D</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>LOCAL DE SERVIÇO:</label>
+                    <select id="localInput">
+                        <optgroup label="GPP">
+                            <option value="GPP I">GPP I - PAVÃO</option>
+                            <option value="GPP II">GPP II - PAVÃOZINHO</option>
+                            <option value="GPP III">GPP III - CANTAGALO</option>
+                            <option value="GPP IV">GPP IV</option>
+                            <option value="GPP V">GPP V</option>
+                        </optgroup>
+                        <optgroup label="GTPP">
+                            <option value="GTPP I">GTPP I - PAVÃO</option>
+                            <option value="GTPP II">GTPP II - CANTAGALO</option>
+                            <option value="GTPP III">GTPP III - COPACABANA</option>
+                            <option value="GTPP IV">GTPP IV - PAVÃOZINHO</option>
+                        </optgroup>
                     </select>
                 </div>
                 
@@ -362,12 +198,11 @@
                 </label>
             </div>
 
-            <img id="preview-img" alt="Prévia">
+            <img id="preview-img">
             <button id="btnSalvar" class="btn-salvar" onclick="salvarRegistro()">💾 GRAVAR REGISTRO</button>
         </div>
 
-        <div id="gridRegistros" class="grid-papeletas">
-            </div>
+        <div id="gridRegistros" class="grid-papeletas"></div>
     </div>
 
     <div id="modal-overlay" onclick="this.style.display='none'">
@@ -375,122 +210,92 @@
     </div>
 
     <script>
-        // --- LÓGICA JAVASCRIPT (IDÊNTICA À ANTERIOR) ---
-        let bancoDados = JSON.parse(localStorage.getItem('papeletas_db_v2')) || [];
+        let bancoDados = JSON.parse(localStorage.getItem('papeletas_db_v3')) || [];
         document.getElementById('dataInput').valueAsDate = new Date();
         let fotoAtualBase64 = null;
 
         function processarFoto() {
             const input = document.getElementById('cameraInput');
-            const file = input.files[0];
-            if (file) {
+            if (input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = new Image();
                     img.src = e.target.result;
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const maxW = 800; // Tamanho máximo
+                        const maxW = 800;
                         const scale = maxW / img.width;
                         canvas.width = maxW;
                         canvas.height = img.height * scale;
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
                         fotoAtualBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                        const preview = document.getElementById('preview-img');
-                        preview.src = fotoAtualBase64;
-                        preview.style.display = 'block';
+                        document.getElementById('preview-img').src = fotoAtualBase64;
+                        document.getElementById('preview-img').style.display = 'block';
                         document.getElementById('btnSalvar').style.display = 'block';
                     }
                 }
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
         function salvarRegistro() {
-            if (!fotoAtualBase64) return alert("Tire a foto da papeleta primeiro!");
+            if (!fotoAtualBase64) return alert("Tire a foto!");
             const registro = {
                 id: Date.now(),
                 data: document.getElementById('dataInput').value,
                 turma: document.getElementById('turmaInput').value,
+                local: document.getElementById('localInput').value,
                 foto: fotoAtualBase64
             };
             bancoDados.unshift(registro);
-            try {
-                // Mudei o nome do banco para v2 para não misturar com testes anteriores
-                localStorage.setItem('papeletas_db_v2', JSON.stringify(bancoDados));
-                alert("Papeleta da Turma " + registro.turma + " registrada!");
-                resetarForm();
-                renderizarLista();
-            } catch (e) {
-                alert("Erro: Memória do navegador cheia! Apague registros antigos.");
-            }
+            localStorage.setItem('papeletas_db_v3', JSON.stringify(bancoDados));
+            alert("Registrado: " + registro.local + " (" + registro.turma + ")");
+            location.reload(); 
         }
 
-        function resetarForm() {
-            fotoAtualBase64 = null;
-            document.getElementById('preview-img').style.display = 'none';
-            document.getElementById('btnSalvar').style.display = 'none';
-            document.getElementById('cameraInput').value = '';
-            document.getElementById('dataInput').valueAsDate = new Date();
-        }
-
-        function renderizarLista(filtroTurma = 'TODAS') {
+        function renderizarLista(filtro = 'TODAS') {
             const grid = document.getElementById('gridRegistros');
             grid.innerHTML = '';
-            const listaFiltrada = filtroTurma === 'TODAS' 
-                ? bancoDados 
-                : bancoDados.filter(item => item.turma === filtroTurma);
+            const lista = filtro === 'TODAS' ? bancoDados : bancoDados.filter(i => i.turma === filtro);
 
-            if (listaFiltrada.length === 0) {
-                grid.innerHTML = '<p style="color:#ccc; grid-column: 1/-1; text-align:center; font-style:italic;">Nenhum registro encontrado para este filtro.</p>';
-                return;
-            }
-
-            listaFiltrada.forEach(item => {
-                const dataFormatada = item.data.split('-').reverse().join('/');
-                const card = `
+            lista.forEach(item => {
+                const dataF = item.data.split('-').reverse().join('/');
+                grid.innerHTML += `
                     <div class="card">
                         <div class="card-header">
-                            <span>📅 ${dataFormatada}</span>
-                            <span class="turma-badge">${item.turma}</span>
+                            📅 ${dataF}
                         </div>
-                        <img src="${item.foto}" class="card-img" onclick="verFotoGrande('${item.foto}')">
-                        <button class="btn-excluir" onclick="excluirRegistro(${item.id})">🗑️ Excluir</button>
+                        <div class="card-body">
+                            <span class="badge">TURMA ${item.turma}</span>
+                            <span class="badge" style="background: #b8860b">${item.local}</span>
+                        </div>
+                        <img src="${item.foto}" class="card-img" onclick="verFoto('${item.foto}')">
+                        <button class="btn-excluir" onclick="excluir(${item.id})">🗑️ Excluir</button>
                     </div>
                 `;
-                grid.innerHTML += card;
             });
         }
 
-        function filtrar(turma) {
-            document.querySelectorAll('.btn-filtro').forEach(btn => {
-                btn.classList.remove('ativo');
-                if(btn.innerText === turma || (turma === 'TODAS' && btn.innerText === 'TODAS')) {
-                    btn.classList.add('ativo');
-                }
-            });
-            renderizarLista(turma);
+        function filtrar(t) {
+            document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('ativo'));
+            event.target.classList.add('ativo');
+            renderizarLista(t);
         }
 
-        function excluirRegistro(id) {
-            if(confirm("ATENÇÃO: Deseja realmente apagar este registro de papeleta?")) {
-                bancoDados = bancoDados.filter(item => item.id !== id);
-                localStorage.setItem('papeletas_db_v2', JSON.stringify(bancoDados));
+        function excluir(id) {
+            if(confirm("Excluir?")) {
+                bancoDados = bancoDados.filter(i => i.id !== id);
+                localStorage.setItem('papeletas_db_v3', JSON.stringify(bancoDados));
                 renderizarLista();
             }
         }
 
-        function verFotoGrande(src) {
+        function verFoto(src) {
             document.getElementById('modal-img').src = src;
             document.getElementById('modal-overlay').style.display = 'flex';
         }
 
-        // Inicialização
         renderizarLista();
-        // Marca o botão 'TODAS' como ativo inicialmente
-        document.querySelector('.btn-filtro').classList.add('ativo');
-
     </script>
 </body>
 </html>
