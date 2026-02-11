@@ -7,7 +7,6 @@
     <link rel="shortcut icon" type="imagex/png" href="caveira.ico">
 
     <style>
-        /* --- ESTÉTICA PMERJ --- */
         :root {
             --cor-fundo: #00153B; 
             --cor-card: #F4F4F4;  
@@ -50,7 +49,6 @@
 
         .main-container { padding: 0 20px; max-width: 1200px; margin: 0 auto; }
 
-        /* --- TOOLBARS --- */
         .transfer-container {
             display: flex;
             justify-content: center;
@@ -63,7 +61,6 @@
             flex-wrap: wrap;
         }
 
-        .filtros-container { display: flex; justify-content: center; gap: 8px; margin: 25px 0; flex-wrap: wrap; }
         .btn-filtro {
             background: rgba(0, 32, 91, 0.6);
             border: 2px solid var(--cor-destaque);
@@ -77,7 +74,6 @@
         .btn-filtro.ativo { background: var(--cor-destaque); color: var(--cor-fundo); }
         .btn-sync { border-radius: 8px; padding: 10px 15px; font-size: 0.75rem; }
 
-        /* --- REGISTRO --- */
         .registro-box {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 215, 0, 0.3);
@@ -131,7 +127,6 @@
             margin: 15px auto 0;
         }
 
-        /* --- GESTÃO DE POLICIAIS --- */
         #gestaoPoliciais {
             display: none;
             background: #f8f9fa;
@@ -142,7 +137,6 @@
             border: 2px solid var(--cor-botao);
         }
 
-        /* --- GRID --- */
         .grid-papeletas { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
         .card { background: var(--cor-card); color: var(--cor-texto); border-radius: 12px; overflow: hidden; border-bottom: 6px solid var(--cor-botao); }
         .card-header { background: #e9ecef; padding: 10px; font-size: 0.8rem; font-weight: bold; }
@@ -203,14 +197,14 @@
             <div id="listaCadastrados" style="max-height: 150px; overflow-y: auto; font-size: 0.8rem;"></div>
         </div>
 
-        <div class="filtros-container">
+      <center>  <div class="filtros-container">
             <button class="btn-filtro ativo" onclick="filtrar('TODAS')">TODAS</button>
             <button class="btn-filtro" onclick="filtrar('A')">TURMA A</button>
             <button class="btn-filtro" onclick="filtrar('B')">TURMA B</button>
             <button class="btn-filtro" onclick="filtrar('C')">TURMA C</button>
             <button class="btn-filtro" onclick="filtrar('D')">TURMA D</button>
-        </div>
-
+        </div></center>
+<br>
         <div class="registro-box">
             <div class="inputs-row">
                 <div class="input-group">
@@ -218,11 +212,13 @@
                     <input type="date" id="dataInput">
                 </div>
 
-                <div class="input-group">
+                <div class="input-group" style="position: relative;">
                     <label>RESPONSÁVEL (OPCIONAL):</label>
-                    <select id="responsavelInput" onchange="autoPreencher()">
-                        <option value="">-- SELECIONE SE HOUVER --</option>
-                    </select>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="text" id="responsavelInput" list="listaPoliciaisDatalist" placeholder="Nome ou selecione..." oninput="autoPreencherHibrido()" style="flex-grow: 1;">
+                        <button onclick="limparResponsavel()" style="margin-top:5px; border-radius:8px; border:1px solid #ccc; cursor:pointer; background: #eee;">✕</button>
+                    </div>
+                    <datalist id="listaPoliciaisDatalist"></datalist>
                 </div>
                 
                 <div class="input-group">
@@ -271,7 +267,6 @@
     <script>
         let bancoDados = JSON.parse(localStorage.getItem('papeletas_db_v3')) || [];
         
-        // Lista inicial de policiais baseada no seu texto
         let listaPoliciais = JSON.parse(localStorage.getItem('policiais_pmerj_db')) || [
             {nome: "CB PM 103727 BIZONI", local: "GPP II", ala: "A"},
             {nome: "CB PM 106561 MARCOS", local: "GPP II", ala: "A"},
@@ -339,23 +334,29 @@
         document.getElementById('dataInput').valueAsDate = new Date();
         let fotoAtualBase64 = null;
 
-        // Iniciar campos
         function atualizarSelectPoliciais() {
-            const select = document.getElementById('responsavelInput');
-            select.innerHTML = '<option value="">-- SELECIONE SE HOUVER --</option>';
+            const datalist = document.getElementById('listaPoliciaisDatalist');
+            datalist.innerHTML = '';
             listaPoliciais.sort((a,b) => a.nome.localeCompare(b.nome)).forEach(p => {
-                select.innerHTML += `<option value="${p.nome}">${p.nome}</option>`;
+                const option = document.createElement('option');
+                option.value = p.nome;
+                datalist.appendChild(option);
             });
             renderizarListaGestao();
         }
 
-        function autoPreencher() {
-            const nome = document.getElementById('responsavelInput').value;
-            const policial = listaPoliciais.find(p => p.nome === nome);
+        function autoPreencherHibrido() {
+            const nomeDigitado = document.getElementById('responsavelInput').value.toUpperCase();
+            const policial = listaPoliciais.find(p => p.nome.toUpperCase() === nomeDigitado);
             if(policial) {
                 document.getElementById('localInput').value = policial.local;
                 document.getElementById('turmaInput').value = policial.ala;
             }
+        }
+
+        function limparResponsavel() {
+            document.getElementById('responsavelInput').value = '';
+            document.getElementById('responsavelInput').focus();
         }
 
         function toggleGestao() {
@@ -394,7 +395,6 @@
             ).join('');
         }
 
-        // Lógica de Foto e Salvar
         function processarFoto() {
             const input = document.getElementById('cameraInput');
             if (input.files[0]) {
@@ -426,7 +426,7 @@
                 data: document.getElementById('dataInput').value,
                 turma: document.getElementById('turmaInput').value,
                 local: document.getElementById('localInput').value,
-                responsavel: document.getElementById('responsavelInput').value || "Não informado",
+                responsavel: document.getElementById('responsavelInput').value.trim() || "Não informado",
                 foto: fotoAtualBase64
             };
             bancoDados.unshift(registro);
@@ -456,7 +456,6 @@
             });
         }
 
-        // Funções de Exportação (Conforme solicitado anteriormente)
         function exportarDados() {
             const dataStr = JSON.stringify({papeletas: bancoDados, policiais: listaPoliciais});
             const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
