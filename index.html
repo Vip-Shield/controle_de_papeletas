@@ -14,6 +14,8 @@
             --cor-destaque: #FFD700; 
             --cor-texto: #333;
             --cor-botao: #00205b;
+            --cor-sucesso: #28a745;
+            --cor-import: #007bff;
         }
 
         body {
@@ -48,6 +50,18 @@
 
         .main-container { padding: 0 20px; max-width: 1200px; margin: 0 auto; }
 
+        /* --- TOOLBAR DE TRANSFERÊNCIA --- */
+        .transfer-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px dashed rgba(255, 215, 0, 0.2);
+        }
+
         /* --- FILTROS --- */
         .filtros-container { display: flex; justify-content: center; gap: 8px; margin: 25px 0; flex-wrap: wrap; }
         .btn-filtro {
@@ -59,8 +73,15 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 0.8rem;
+            transition: 0.3s;
         }
         .btn-filtro.ativo { background: var(--cor-destaque); color: var(--cor-fundo); }
+        
+        .btn-sync {
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 0.75rem;
+        }
 
         /* --- REGISTRO --- */
         .registro-box {
@@ -148,8 +169,15 @@
     <div class="faixa-decorativa"></div>
 
     <div class="main-container">
+        
+        <div class="transfer-container">
+            <button class="btn-filtro btn-sync" style="border-color: var(--cor-sucesso); color: var(--cor-sucesso);" onclick="exportarDados()">📤 EXPORTAR PARA OUTRO PC</button>
+            <button class="btn-filtro btn-sync" style="border-color: var(--cor-import); color: var(--cor-import);" onclick="document.getElementById('importarFile').click()">📥 IMPORTAR DE OUTRO PC</button>
+            <input type="file" id="importarFile" style="display: none;" accept=".json" onchange="importarDados(this)">
+        </div>
+
         <div class="filtros-container">
-            <button class="btn-filtro" onclick="filtrar('TODAS')">TODAS</button>
+            <button class="btn-filtro ativo" onclick="filtrar('TODAS')">TODAS</button>
             <button class="btn-filtro" onclick="filtrar('A')">TURMA A</button>
             <button class="btn-filtro" onclick="filtrar('B')">TURMA B</button>
             <button class="btn-filtro" onclick="filtrar('C')">TURMA C</button>
@@ -210,6 +238,7 @@
     </div>
 
     <script>
+        // Carrega o banco do LocalStorage
         let bancoDados = JSON.parse(localStorage.getItem('papeletas_db_v3')) || [];
         document.getElementById('dataInput').valueAsDate = new Date();
         let fotoAtualBase64 = null;
@@ -253,6 +282,58 @@
             location.reload(); 
         }
 
+        /* --- FUNÇÕES DE EXPORTAR E IMPORTAR --- */
+
+        function exportarDados() {
+            if (bancoDados.length === 0) {
+                alert("Não há dados para exportar.");
+                return;
+            }
+
+            const dataStr = JSON.stringify(bancoDados);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            
+            const dataAtual = new Date().toISOString().slice(0,10);
+            const nomeArquivo = `backup_papeletas_pmerj_${dataAtual}.json`;
+
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', nomeArquivo);
+            linkElement.click();
+        }
+
+        function importarDados(input) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                try {
+                    const dadosImportados = JSON.parse(reader.result);
+                    
+                    if (!Array.isArray(dadosImportados)) {
+                        alert("Arquivo inválido!");
+                        return;
+                    }
+
+                    if (confirm(`Deseja importar ${dadosImportados.length} registros? Registros duplicados serão ignorados.`)) {
+                        // Evita duplicados comparando o ID
+                        const idsExistentes = new Set(bancoDados.map(item => item.id));
+                        const novosRegistros = dadosImportados.filter(item => !idsExistentes.has(item.id));
+                        
+                        bancoDados = [...novosRegistros, ...bancoDados];
+                        
+                        localStorage.setItem('papeletas_db_v3', JSON.stringify(bancoDados));
+                        
+                        alert(`${novosRegistros.length} novos registros foram adicionados!`);
+                        location.reload();
+                    }
+                } catch (e) {
+                    alert("Erro ao ler o arquivo. Certifique-se de que é o arquivo .json correto.");
+                }
+            };
+            reader.readAsText(input.files[0]);
+        }
+
+        /* --- RESTANTE DA LÓGICA DE INTERFACE --- */
+
         function renderizarLista(filtro = 'TODAS') {
             const grid = document.getElementById('gridRegistros');
             grid.innerHTML = '';
@@ -283,7 +364,7 @@
         }
 
         function excluir(id) {
-            if(confirm("Excluir?")) {
+            if(confirm("Excluir definitivamente este registro?")) {
                 bancoDados = bancoDados.filter(i => i.id !== id);
                 localStorage.setItem('papeletas_db_v3', JSON.stringify(bancoDados));
                 renderizarLista();
